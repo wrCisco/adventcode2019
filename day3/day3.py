@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-from typing import Any, Sequence, Set, List
+from typing import Any, Sequence, Mapping, Set, List
 
 
 class Wire:
@@ -12,7 +12,7 @@ class Wire:
         self.length = 0
         self.coordinates = self.compute_path()
 
-    def compute_path(self):
+    def compute_path(self) -> Mapping[tuple, int]:
         coords = {}
         pos = [0, 0]
         for direction, length in self.path:
@@ -51,7 +51,7 @@ def run():
     wires[0].compute_path()
     wires[1].compute_path()
     intersections = wires[0].compare_paths(wires[1].coordinates)
-    
+
     intersections.sort(key=lambda elem: elem[0][0] + elem[0][1])
     print("Lowest distance:", intersections[0][0][0] + intersections[0][0][1])
 
