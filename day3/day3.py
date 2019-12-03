@@ -52,11 +52,11 @@ def run():
     wires[1].compute_path()
     intersections = wires[0].compare_paths(wires[1].coordinates)
 
-    intersections.sort(key=lambda elem: elem[0][0] + elem[0][1])
-    print("Lowest distance:", intersections[0][0][0] + intersections[0][0][1])
+    min_distance = min(intersections, key=lambda elem: elem[0][0] + elem[0][1])
+    print("Lowest distance:", min_distance[0][0] + min_distance[0][1])
 
-    intersections.sort(key=lambda elem: elem[1])
-    print("Minimum number of steps:", intersections[0][1])
+    min_steps = min(intersections, key=lambda elem: elem[1])
+    print("Minimum number of steps:", min_steps[1])
 
 
 if __name__ == '__main__':
