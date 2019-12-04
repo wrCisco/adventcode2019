@@ -6,10 +6,13 @@ with open('input.txt', encoding='utf-8') as fh:
 
 fuel = 0
 
-for mass in data:
+modules = len(data)
+for i, mass in enumerate(data):
+    if i == modules:
+        print(fuel)  # first answer
     fuel_for_module = mass // 3 - 2
     if fuel_for_module >= 9:
         data.append(fuel_for_module)
     fuel += fuel_for_module
 
-print(fuel)
+print(fuel)  # second answer
