@@ -45,19 +45,20 @@ def find_santa(orbits: dict, orbitants: dict, start: str, finish: str):
 
 
 def run():
+    # centers_of_mass = { satellite: com }
+    # satellites = { com: satellite }
     with open('input.txt', encoding='utf-8') as fh:
-        orbits = {
-        line.split(')')[1].strip('\n'): line.split(')')[0] for line in fh.readlines() if line
-    }
+        centers_of_mass = {
+            l[l.index(')')+1:].strip('\n'): l[:l.index(')')] for l in fh.readlines() if l
+        }
     # first question
     total_orbits = 0
-    for corp in orbits:
-        rcom = orbits[corp]
+    for satellite in centers_of_mass:
+        com = centers_of_mass[satellite]
         orbit_number = 1
         while True:
             try:
-                rcom = orbits[rcom]
-                print
+                com = centers_of_mass[com]
                 orbit_number += 1
             except KeyError:
                 break
@@ -65,13 +66,20 @@ def run():
     print(total_orbits)
 
     # second question
-    orbitants = {}
-    for orbitant, r_com in orbits.items():
+    satellites = {}
+    for satellite, com in centers_of_mass.items():
         try:
-            orbitants[r_com].append(orbitant)
+            satellites[com].append(satellite)
         except KeyError:
-            orbitants[r_com] = [orbitant]
-    print(find_santa(orbits, orbitants, orbits['YOU'], orbits['SAN']))
+            satellites[com] = [satellite]
+    print(
+        find_santa(
+            centers_of_mass,
+            satellites,
+            centers_of_mass['YOU'],
+            centers_of_mass['SAN']
+        )
+    )
 
 if __name__ == '__main__':
     run()
