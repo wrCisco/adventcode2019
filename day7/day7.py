@@ -97,7 +97,7 @@ class IntcodeComputer:
             # print(f'BEFORE\nrunning program index {self.running_program}')
             # self.programs[self.running_program].dump_program()
             offset = self.compute()
-            if offset:
+            if offset and not self.program_to_freeze:
                 self.instruction_pointer += offset
             # print(f'AFTER\nrunning program index {self.running_program}')
             # self.freeze_running_program()
@@ -160,7 +160,6 @@ class IntcodeComputer:
         out, _ = self.parameters(modes[:2])
         #print(out)
         self.last_output = out
-        self.program_to_freeze.append(self.running_program)
         self.programs[self.next_program()].inputs.append(out)
 
     def jump_if_true(self, modes: str) -> None:
