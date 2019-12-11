@@ -46,7 +46,7 @@ def find_santa(orbits: dict, orbitants: dict, start: str, finish: str):
 
 def run():
     # centers_of_mass = { satellite: com }
-    # satellites = { com: satellite }
+    # satellites = { com: [satellite, ...] }
     with open('input.txt', encoding='utf-8') as fh:
         centers_of_mass = {
             l[l.index(')')+1:].strip('\n'): l[:l.index(')')] for l in fh.readlines() if l
