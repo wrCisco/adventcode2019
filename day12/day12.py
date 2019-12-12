@@ -3,80 +3,80 @@
 
 
 import re
-from typing import Sequence
+from typing import List, Sequence
 
 
 class Moon:
 
-    def __init__(self, x, y, z):
+    def __init__(self, x: int, y: int, z: int) -> None:
         self._pos = [x, y, z]
         self._velocity = [0, 0, 0]
 
     @property
-    def x(self):
+    def x(self) -> int:
         return self.pos[0]
 
     @x.setter
-    def x(self, value):
+    def x(self, value: int) -> None:
         self.pos[0] = value
 
     @property
-    def y(self):
+    def y(self) -> int:
         return self.pos[1]
 
     @y.setter
-    def y(self, value):
+    def y(self, value: int) -> None:
         self.pos[1] = value
 
     @property
-    def z(self):
+    def z(self) -> int:
         return self.pos[2]
 
     @z.setter
-    def z(self, value):
+    def z(self, value: int) -> None:
         self.pos[2] = value
 
     @property
-    def pos(self):
+    def pos(self) -> List[int]:
         return self._pos
     
     @pos.setter
-    def pos(self, value):
+    def pos(self, value: List[int]) -> None:
         self._pos = value
 
     @property
-    def dx(self):
+    def dx(self) -> int:
         return self._velocity[0]
 
     @dx.setter
-    def dx(self, value):
+    def dx(self, value: int) -> None:
         self.velocity[0] = value
 
     @property
-    def dy(self):
+    def dy(self) -> int:
         return self._velocity[1]
 
     @dy.setter
-    def dy(self, value):
+    def dy(self, value: int) -> None:
         self.velocity[1] = value
 
     @property
-    def dz(self):
+    def dz(self) -> int:
         return self._velocity[2]
 
     @dz.setter
-    def dz(self, value):
+    def dz(self, value: int) -> None:
         self.velocity[2] = value
 
     @property
-    def velocity(self):
+    def velocity(self) -> List[int]:
         return self._velocity
     
     @velocity.setter
-    def velocity(self, value):
+    def velocity(self, value: List[int]) -> None:
         self._velocity = value
 
-    def update_velocity(self, others: Sequence['Moon']):
+    def update_velocity(self, others: Sequence['Moon']) -> None:
         dvel = [0, 0, 0]
         for moon in others:
             if moon is self:
@@ -88,20 +88,20 @@ class Moon:
                     dvel[i] += 1
         self.velocity = [self._velocity[i] + dvel[i] for i in range(3)]
 
-    def update_pos(self):
+    def update_pos(self) -> None:
         self.pos = [self._pos[i] + self._velocity[i] for i in range(3)]
 
-    def potential_energy(self):
+    def potential_energy(self) -> int:
         return sum(abs(x) for x in self.pos)
 
-    def kinetic_energy(self):
+    def kinetic_energy(self) -> int:
         return sum(abs(x) for x in self.velocity)
 
-    def dump_posvel(self):
+    def dump_posvel(self) -> None:
         print(f'pos: x={self.x} y={self.y} z={self.z}   vel: x={self.dx} y={self.dy} z={self.dz}')
 
 
-def gcd(a, b):
+def gcd(a: int, b: int) -> int:
     if not a or not b:
         raise ValueError
     r = 1
@@ -111,8 +111,11 @@ def gcd(a, b):
         b = r
     return a
 
-def lcm(a, b):
-    return (a * b) / gcd(a, b)
+
+def lcm(a: int, b: int) -> int:
+    if not a or not b:
+        return 0
+    return (a * b) // gcd(a, b)
 
 
 def run():
@@ -122,11 +125,13 @@ def run():
             for x, y, z in re.findall(r'x=(-?\d+), y=(-?\d+), z=(-?\d+)', line)
         ]
 
-    prev_x, prev_y, prev_z = {}, {}, {}
-    p_x, p_y, p_z = 0, 0, 0
+    prev_x, prev_y, prev_z = {}, {}, {}  # dictionaries of previous configurations
+    p_x, p_y, p_z = 0, 0, 0  # periods of single dimensions
     step = 0
     while not p_x or not p_y or not p_z:
-        xs, ys, zs = tuple((moon.x, moon.dx) for moon in moons), tuple((moon.y, moon.dy) for moon in moons), tuple((moon.z, moon.dz) for moon in moons)
+        xs = tuple((moon.x, moon.dx) for moon in moons)
+        ys = tuple((moon.y, moon.dy) for moon in moons)
+        zs = tuple((moon.z, moon.dz) for moon in moons)
         if prev_x.get(xs) and not p_x:
             print(f'found x period: from step {prev_x[xs]} to step {step}')
             print(xs)
@@ -163,7 +168,7 @@ def run():
             #     moon.dump_posvel()
         step += 1
 
-    print('number of steps before first period:', int(lcm(lcm(p_x, p_y), p_z)))
+    print('number of steps before first period:', lcm(lcm(p_x, p_y), p_z))
 
 if __name__ == '__main__':
     run()
