@@ -104,11 +104,8 @@ class Moon:
 def gcd(a: int, b: int) -> int:
     if not a or not b:
         raise ValueError
-    r = 1
-    while r:
-        r = a % b
-        a = b
-        b = r
+    while b:
+        a, b = b, a % b
     return a
 
 
