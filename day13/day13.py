@@ -4,7 +4,6 @@
 from typing import Sequence, Optional, Callable, List, Union, Any, MutableMapping
 from collections import defaultdict
 
-
 class InvalidInstruction(Exception):
     pass
 
@@ -37,10 +36,13 @@ class Program:
         '''
         output_recipient must have a 'process' method
         which takes as argument the output of the program
-        and is called every time an output instruction is executed.
+        and is called every time an output instruction is executed
+        (if there is an output_recipient).
         input_source must have a 'send' method, which must return
         the values (as a list) to extend the 'inputs' list
-        of the program.
+        of the program. The send method is called every time an
+        input instruction is executed and the inputs list of the
+        program is empty (and input_source is not None).
         '''
         self.memory = defaultdict(int)
         for i, code in enumerate(memory):
@@ -66,11 +68,11 @@ class Program:
 class ArcadeRenderer:
 
     items = {
-        0: 'empty',
-        1: 'wall',
-        2: 'block',
-        3: 'horizontal paddle',
-        4: 'ball'
+        0: ' ', # 'empty',
+        1: 'X', # 'wall',
+        2: '=', # 'block',
+        3: '^', # 'horizontal paddle',
+        4: 'o'  # 'ball'
     }
 
     def __init__(self, interactive: bool = False):
@@ -107,17 +109,21 @@ class ArcadeRenderer:
         self.map.clear()
         self.buffer.clear()
         self.block_tiles = 0
+        self.width = 0
+        self.height = 0
+        self.score = 0
+        self.paddle = -1
+        self.ball = -1
 
     def render(self):
         for y in range(self.height+1):
-            print(''.join(str(self.map[(x, y)]) for x in range(self.width+1)).replace('0', ' '))
+            print(''.join(ArcadeRenderer.items[self.map[(x, y)]] for x in range(self.width+1)))
         print(f'Score: {self.score:0>5}\n')
 
     def joystick(self):
         if self.interactive:
             self.render()
-            x = input('input (-1: left, 0: stand, 1: right)> ')
-            return int(x or 0)
+            return(int(input('input (-1: left, 0: stand, 1: right)> ') or 0))
         else:
             if self.paddle < self.ball:
                 return 1
@@ -339,6 +345,7 @@ def run():
     print(arcade.block_tiles)
 
     arcade.clear()
+    #arcade.interactive = True
     game = Program(program, 0, [], 0, arcade, arcade)
     game.memory[0] = 2
     computer.run_program(game)
