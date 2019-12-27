@@ -389,7 +389,7 @@ def bfs(graph: MutableMapping[complex, str], start: complex, end: complex):
                 if not index:
                     p = path
                 else:
-                    new_paths.append(path.copy())
+                    new_paths.append(path[:-1])
                     p = new_paths[-1]
                 p.append(neighbour)
                 graph[neighbour] = 'O'
