@@ -70,7 +70,7 @@ def run():
     collected_ore = 1000000000000
     fuel_bottom = collected_ore // ore_per_fuel
     fuel_top = collected_ore // ore_per_fuel * 100  # reasonably higher than the produced fuel
-    fuel = fuel_bottom
+    fuel = (fuel_top + fuel_bottom) // 2
     while fuel_top != fuel_bottom + 1:
         ore = get_reagents(deepcopy(orig_reactions), reactions['FUEL'], fuel)
         if ore > collected_ore:
